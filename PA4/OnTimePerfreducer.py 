@@ -1,0 +1,27 @@
+#!/usr/bin/env python3
+
+from operator import itemgetter
+import sys
+
+airline_delay = {}
+
+# input comes from STDIN
+for line in sys.stdin:
+    # remove leading and trailing whitespace
+    line = line.strip()
+
+    # parse the input we got from mapper.py
+    airline, delay = line.split('\t')
+    # convert count (currently a string) to int
+
+    # this IF-switch only works because Hadoop sorts map output
+    # by key (here: word) before it is passed to the reducer
+    if airline in airline_delay:
+        airline_delay[airline].append(int(float(delay)))
+    else:
+        airline_delay[airline] = []
+        airline_delay[airline].append(int(float(delay)))
+
+for airline in airline_delay.keys():
+    avg_delay = sum(airline_delay[airline])*1.0 / len(airline_delay[airline])
+    print ("{0}\t{1}".format(airline, avg_delay))
